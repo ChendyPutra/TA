@@ -12,4 +12,9 @@ class Admin extends Authenticatable
     protected $fillable = ['name', 'email', 'password'];
 
     protected $hidden = ['password'];
+
+    public function bidang() {
+    return $this->belongsTo(Bidang::class);
+}
+
 }

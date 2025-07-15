@@ -19,10 +19,16 @@ class WilayahPertanian extends Model
         'polygon',
         'polygon_kecamatan',
         'jumlah_komoditas',
+         'bidang_id',
     ];
      // Relasi ke model Kecamatan
      public function kecamatan()
      {
          return $this->belongsTo(Kecamatan::class, 'kecamatan_id');  // Menggunakan 'kecamatan_id' untuk relasi
      }
+
+     public function bidang()
+{
+    return $this->belongsTo(Bidang::class);
+}
 }

@@ -11,6 +11,7 @@ use App\Models\Kabupaten;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
+
 // Route untuk login admin
 Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
@@ -26,6 +27,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/peta-kabupaten', [KabupatenController::class, 'map'])->name('admin.kabupaten.map');
     Route::resource('kecamatan', KecamatanController::class);
     Route::resource('kabupaten', KabupatenController::class);
+    Route::get('/admin/komoditas', [WilayahController::class, 'index'])->name('admin.komoditas.index');
 
 
 });
@@ -33,3 +35,12 @@ Route::get('/get-polygon-kabupaten', [WilayahController::class, 'getPolygonKabup
 Route::get('/get-kecamatan/{id}', [WilayahController::class, 'getKecamatan'])->name('get.kecamatan');
 Route::get('/', [HomeController::class, 'indexs'])->name('home');
 
+// ROUTE UNTUK SUPERADMIN
+Route::middleware(['auth:admin', 'role:superadmin'])->group(function () {
+    Route::get('/admin/manage-admin', [AdminAuthController::class, 'index'])->name('admin.manage.index');
+    Route::get('/admin/manage-admin/create', [AdminAuthController::class, 'create'])->name('admin.manage.create');
+    Route::post('/admin/manage-admin', [AdminAuthController::class, 'store'])->name('admin.manage.store');
+    Route::get('/admin/manage-admin/{id}/edit', [AdminAuthController::class, 'edit'])->name('admin.manage.edit');
+    Route::put('/admin/manage-admin/{id}', [AdminAuthController::class, 'update'])->name('admin.manage.update');
+    Route::delete('/admin/manage-admin/{id}', [AdminAuthController::class, 'destroy'])->name('admin.manage.destroy');
+});
