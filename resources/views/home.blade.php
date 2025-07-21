@@ -61,7 +61,6 @@
                 <a href="#home" class="text-slate-600 hover:text-agri-green-dark transition-colors duration-300">Beranda</a>
                 <a href="#insights" class="text-slate-600 hover:text-agri-green-dark transition-colors duration-300">Wawasan Data</a>
                 <a href="#map-section" class="text-slate-600 hover:text-agri-green-dark transition-colors duration-300">Peta Digital</a>
-                <a href="#faq" class="text-slate-600 hover:text-agri-green-dark transition-colors duration-300">FAQ</a>
             </div>
             <div class="md:hidden">
                 <button id="mobile-menu-button" class="text-agri-dark focus:outline-none">
@@ -74,7 +73,6 @@
                 <a href="#home" class="nav-link-mobile block text-slate-600 hover:bg-agri-green-light rounded-md py-2 px-3">Beranda</a>
                 <a href="#insights" class="nav-link-mobile block text-slate-600 hover:bg-agri-green-light rounded-md py-2 px-3">Wawasan Data</a>
                 <a href="#map-section" class="nav-link-mobile block text-slate-600 hover:bg-agri-green-light rounded-md py-2 px-3">Peta Digital</a>
-                <a href="#faq" class="nav-link-mobile block text-slate-600 hover:bg-agri-green-light rounded-md py-2 px-3">FAQ</a>
             </div>
         </div>
     </header>
@@ -279,34 +277,7 @@
             </div>
         </section>
 
-        <section id="faq" class="py-24 bg-white">
-            <div class="container mx-auto px-6 max-w-4xl">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-agri-dark">Pertanyaan Umum (FAQ)</h2>
-                    <p class="text-slate-500 mt-2 text-lg">Jawaban atas pertanyaan yang sering diajukan tentang portal ini.</p>
-                </div>
-                <div id="faq-accordion" class="space-y-4">
-                    <div class="border border-gray-200 rounded-lg bg-white overflow-hidden">
-                        <button class="faq-toggle w-full flex justify-between items-center p-6 text-left">
-                            <span class="text-lg font-semibold text-agri-dark">Apa itu Portal Data Pertanian ini?</span>
-                            <i class="faq-icon bi bi-chevron-down text-agri-green transition-transform duration-300"></i>
-                        </button>
-                        <div class="faq-content px-6 pb-6 text-slate-600">
-                            <p>Ini adalah platform teknologi pertanian yang menggunakan pemetaan geospasial dan analisis data untuk membantu petani, pemerintah daerah, dan pemangku kepentingan di Kabupaten Mappi dalam membuat keputusan yang lebih cerdas dan berbasis data.</p>
-                        </div>
-                    </div>
-                    <div class="border border-gray-200 rounded-lg bg-white overflow-hidden">
-                        <button class="faq-toggle w-full flex justify-between items-center p-6 text-left">
-                            <span class="text-lg font-semibold text-agri-dark">Dari mana data berasal dan seberapa akurat?</span>
-                            <i class="faq-icon bi bi-chevron-down text-agri-green transition-transform duration-300"></i>
-                        </button>
-                        <div class="faq-content px-6 pb-6 text-slate-600">
-                             <p>Data kami dikumpulkan melalui survei lapangan dan pemetaan partisipatif yang diverifikasi oleh petugas Dinas Pertanian. Batas poligon dan data luas wilayah diperbarui secara berkala untuk memastikan akurasi setinggi mungkin. Data yang ditampilkan di portal ini adalah hasil agregat dari periode yang relevan.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+       
     </main>
 
     <footer class="bg-agri-dark text-slate-300">

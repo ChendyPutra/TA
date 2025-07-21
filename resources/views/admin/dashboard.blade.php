@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
     {{-- Dependensi yang dipertahankan: Bootstrap Icons untuk ikon & Animate.css jika masih digunakan --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />

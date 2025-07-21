@@ -6,7 +6,7 @@
     {{-- Header --}}
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">Kelola Member Admin</h2>
+            <h2 class="text-2xl font-bold text-gray-800">Data Admin</h2>
             <p class="text-sm text-gray-500">Manajemen akun admin berdasarkan bidang yang tersedia</p>
         </div>
         <a href="{{ route('admin.manage.create') }}"

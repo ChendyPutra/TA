@@ -6,7 +6,7 @@
         {{-- Header Halaman --}}
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                Data Wilayah Komoditas
+                Data Komoditas
             </h1>
             <a href="{{ route('wilayah.create') }}"
                 class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white font-semibold text-sm rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 transition-colors">
