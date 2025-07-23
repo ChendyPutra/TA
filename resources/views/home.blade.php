@@ -630,7 +630,7 @@
                         try {
                             const geojson = JSON.parse(k.polygon_kecamatan);
                             const layer = L.geoJSON(geojson, {
-                                style: { color: k.warna || '#000000', weight: 1, fillOpacity: 0.4, dashArray: '4,4' }
+                                style: { color: k.warna || '#000000', weight: 2, fillOpacity: 0.4, dashArray: '4,4' }
                             }).addTo(map);
                             layer.bindPopup(`<div class="popup-card-animated"><div class="popup-header"><i class="fas fa-location-dot icon"></i><div class="popup-title">${k.nama_kecamatan}</div></div><div class="popup-body"><p><strong>Luas:</strong> ${k.luas_kecamatan} Ha</p></div></div>`);
                         } catch (e) { console.error('Gagal parsing polygon_kecamatan:', e, k.polygon_kecamatan); }
