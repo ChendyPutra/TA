@@ -1,19 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
 
         {{-- Header Halaman --}}
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                Data Komoditas
-            </h1>
-            <a href="{{ route('wilayah.create') }}"
-                class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white font-semibold text-sm rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 transition-colors">
-                <i class="bi bi-plus-circle mr-2"></i>
-                Tambah Data Wilayah
-            </a>
-        </div>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+            Data Komoditas
+        </h1>
+        <a href="{{ route('wilayah.create') }}" class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white font-semibold text-sm rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 transition-colors">
+            <i class="bi bi-plus-circle mr-2"></i>
+            Tambah Data Wilayah
+        </a>
+    </div>
 
         @php
             $admin = auth('admin')->user();
@@ -37,81 +36,65 @@
 
 
 
-        {{-- Tabel Data --}}
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">No</th>
-                        <th scope="col" class="px-6 py-3">Nama Komoditas</th>
-                        <th scope="col" class="px-6 py-3">Kecamatan</th>
-                        <th scope="col" class="px-6 py-3">Warna</th>
-                        <th scope="col" class="px-6 py-3">Luas (Ha)</th>
-                        <th scope="col" class="px-6 py-3">Jumlah Komoditas</th> {{-- ✅ Kolom Baru --}}
-                        <th scope="col" class="px-6 py-3 text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($wilayah as $i => $w)
-                        <tr
-                            class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $i + 1 }}
-                            </th>
-                            <td class="px-6 py-4">
-                                {{ $w->nama_komoditas }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $w->kecamatan?->nama_kecamatan ?? 'N/A' }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-3 py-1 text-xs font-semibold rounded-full"
-                                    style="background: {{ $w->warna }}; color: {{ (new \App\Helpers\ColorHelper())->isDark($w->warna) ? 'white' : 'black' }};">
-                                    {{ $w->warna }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ number_format($w->luas_wilayah, 2) }} Ha
-                            </td>
-                            <td class="px-6 py-4"> {{-- ✅ Kolom Baru --}}
-                                {{ number_format($w->jumlah_komoditas) }}
-                            </td>
+      {{-- Tabel Data --}}
+    <div class="overflow-x-auto rounded-xl">
+        <table class="w-full text-sm text-left text-gray-700 dark:text-gray-200 border border-black dark:border-gray-600 shadow-md rounded-xl overflow-hidden">
+            <thead class="bg-indigo-600 from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-800 text-xs uppercase text-white dark:text-gray-300 tracking-wider">
+                <tr>
+                    <th class="px-6 py-4 border-b">No</th>
+                    <th class="px-6 py-4 border-b">Nama Komoditas</th>
+                    <th class="px-6 py-4 border-b">Kecamatan</th>
+                    <th class="px-6 py-4 border-b">Warna</th>
+                    <th class="px-6 py-4 border-b">Luas (Ha)</th>
+                    <th class="px-6 py-4 border-b">Jumlah Komoditas</th>
+                    <th class="px-6 py-4 border-b text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($wilayah as $i => $w)
+                <tr class="{{ $loop->even ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-900' }} border-b dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-150">
+                    <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">{{ $i + 1 }}</td>
+                    <td class="px-6 py-4">{{ $w->nama_komoditas }}</td>
+                    <td class="px-6 py-4">{{ $w->kecamatan?->nama_kecamatan ?? 'N/A' }}</td>
+                    <td class="px-6 py-4">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold shadow"
+                              style="background: {{ $w->warna }}; color: {{ (new \App\Helpers\ColorHelper())->isDark($w->warna) ? '#fff' : '#000' }};">
+                            {{ $w->warna }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">{{ number_format($w->luas_wilayah, 2) }} Ha</td>
+                    <td class="px-6 py-4">{{ number_format($w->jumlah_komoditas) }}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex justify-center gap-2">
                             @php
-                                $admin = auth('admin')->user();
                                 $canEdit = $admin->role === 'superadmin' || $w->bidang_id == $admin->bidang_id;
                             @endphp
-
-                            <td class="px-6 py-4">
-                                <div class="flex items-center justify-center gap-2">
-                                    @if ($canEdit)
-                                        <a href="{{ route('wilayah.edit', $w->id) }}"
-                                            class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-amber-500 rounded-md hover:bg-amber-600 transition-colors">
-                                            <i class="bi bi-pencil-square mr-1"></i> Edit
-                                        </a>
-                                        <form action="{{ route('wilayah.destroy', $w->id) }}" method="POST" class="delete-form">
-                                            @csrf @method('DELETE')
-                                            <button type="submit"
-                                                class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors">
-                                                <i class="bi bi-trash mr-1"></i> Hapus
-                                            </button>
-                                        </form>
-                                    @else
-                                        <span class="text-gray-400 italic">Tidak dapat diubah</span>
-                                    @endif
-                                </div>
-                            </td>
-
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-                                Tidak ada data wilayah ditemukan. Silakan tambahkan data baru.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                            @if ($canEdit)
+                                <a href="{{ route('wilayah.edit', $w->id) }}" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-yellow-500 rounded-md hover:bg-yellow-600 transition">
+                                    <i class="bi bi-pencil-square mr-1"></i> Edit
+                                </a>
+                                <form action="{{ route('wilayah.destroy', $w->id) }}" method="POST" class="delete-form">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition">
+                                        <i class="bi bi-trash mr-1"></i> Hapus
+                                    </button>
+                                </form>
+                            @else
+                                <span class="text-gray-400 italic">Tidak dapat diubah</span>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="7" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400 italic">
+                        Tidak ada data wilayah ditemukan. Silakan tambahkan data baru.
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
     </div>
 @endsection
 

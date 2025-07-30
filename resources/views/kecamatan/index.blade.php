@@ -15,79 +15,60 @@
     </div>
 
     {{-- Tabel Data --}}
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">No</th>
-                    <th scope="col" class="px-6 py-3">Nama Kecamatan</th>
-                    <th scope="col" class="px-6 py-3">Warna</th>
-                    <th scope="col" class="px-6 py-3">Luas (Ha)</th>
-                    <th scope="col" class="px-6 py-3 text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($kecamatan as $i => $w)
-                <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{ $i + 1 }}
-                    </th>
-                    <td class="px-6 py-4">
-                        {{ $w->nama_kecamatan }}
-                    </td>
-                    <td class="px-6 py-4">
-                        {{-- Badge dengan warna teks dinamis untuk kontras --}}
-                        <span class="px-3 py-1 text-xs font-semibold rounded-full" 
-                              style="background: {{ $w->warna }}; color: {{ (new \App\Helpers\ColorHelper())->isDark($w->warna) ? 'white' : 'black' }};">
-                            {{ $w->warna }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4">
-                        {{ number_format($w->luas_kecamatan, 2) }} Ha
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center justify-center gap-2">
-                            <a href="{{ route('kecamatan.edit', $w->kecamatan_id) }}" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-amber-500 rounded-md hover:bg-amber-600 transition-colors">
-                                <i class="bi bi-pencil-square mr-1"></i> Edit
-                            </a>
-                            <form action="{{ route('kecamatan.destroy', $w->kecamatan_id) }}" method="POST" class="delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors">
-                                    <i class="bi bi-trash mr-1"></i> Hapus
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="5" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-                        Tidak ada data ditemukan.
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    <div class="overflow-x-auto rounded-xl">
+    <table class="w-full text-sm text-left text-gray-700 dark:text-gray-200 border border-black dark:border-gray-600 shadow-md rounded-xl overflow-hidden">
+        <thead class="bg-indigo-600 from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-800 text-xs uppercase text-white dark:text-gray-300 tracking-wider">
+            <tr>
+                <th class="px-6 py-4 border-b border-gray-300 dark:border-gray-600">No</th>
+                <th class="px-6 py-4 border-b border-gray-300 dark:border-gray-600">Nama Kecamatan</th>
+                <th class="px-6 py-4 border-b border-gray-300 dark:border-gray-600">Warna</th>
+                <th class="px-6 py-4 border-b border-gray-300 dark:border-gray-600">Luas (Ha)</th>
+                <th class="px-6 py-4 border-b border-gray-300 dark:border-gray-600 text-center">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($kecamatan as $i => $w)
+            <tr class="{{ $loop->even ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-900' }} border-b border-gray-200 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-150">
+                <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">{{ $i + 1 }}</td>
+                <td class="px-6 py-4">{{ $w->nama_kecamatan }}</td>
+                <td class="px-6 py-4">
+                    <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold shadow"
+                          style="background: {{ $w->warna }}; color: {{ (new \App\Helpers\ColorHelper())->isDark($w->warna) ? '#fff' : '#000' }};">
+                        {{ $w->warna }}
+                    </span>
+                </td>
+                <td class="px-6 py-4">{{ number_format($w->luas_kecamatan, 2) }} Ha</td>
+                <td class="px-6 py-4">
+                    <div class="flex justify-center gap-2">
+                        <a href="{{ route('kecamatan.edit', $w->kecamatan_id) }}"
+                           class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-yellow-500 rounded-md hover:bg-yellow-600 transition">
+                            <i class="bi bi-pencil-square mr-1"></i> Edit
+                        </a>
+                        <form action="{{ route('kecamatan.destroy', $w->kecamatan_id) }}" method="POST" class="delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition">
+                                <i class="bi bi-trash mr-1"></i> Hapus
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="5" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400 italic">
+                    Tidak ada data ditemukan.
+                </td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
 </div>
 
-{{-- 
-    CATATAN: Anda perlu membuat helper sederhana untuk logika kontras warna.
-    Buat file: app/Helpers/ColorHelper.php
-    Isi dengan:
-    <?php
-    namespace App\Helpers;
-    class ColorHelper {
-        public function isDark($hex) {
-            $hex = ltrim($hex, '#');
-            if(strlen($hex) == 3) { $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2]; }
-            $r = hexdec(substr($hex,0,2)); $g = hexdec(substr($hex,2,2)); $b = hexdec(substr($hex,4,2));
-            return (($r*299+$g*587+$b*114)/1000) < 128;
-        }
-    }
-    Lalu pastikan namespace sudah benar dan jalankan 'composer dump-autoload' jika perlu.
---}}
+</div>
+
+
 @endsection
 
 @push('scripts')

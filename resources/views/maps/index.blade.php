@@ -35,13 +35,13 @@
 
 @push('scripts')
     <style>
-       
         #map {
             height: 500px;
             width: 100%;
             border: 1px solid #ccc;
             border-radius: 8px;
-            z-index: 1; /* peta di bawah elemen lain */
+            z-index: 1;
+            /* peta di bawah elemen lain */
         }
 
         .popup-card-animated {
@@ -193,16 +193,16 @@
                             }).addTo(kabupatenLayerGroup);
 
                             layer.bindPopup(`
-        <div class="popup-card-animated">
-            <div class="popup-header">
-                <i class="fas fa-map icon"></i>
-                <div class="popup-title">${kb.nama_kabupaten}</div>
+            <div class="popup-card-animated">
+                <div class="popup-header">
+                    <i class="fas fa-map icon"></i>
+                    <div class="popup-title">${kb.nama_kabupaten}</div>
+                </div>
+                <div class="popup-body">
+                    <p><strong>Luas:</strong> ${kb.luas_kabupaten} Ha</p>
+                </div>
             </div>
-            <div class="popup-body">
-                <p><strong>Luas:</strong> ${kb.luas_kabupaten} Ha</p>
-            </div>
-        </div>
-    `);
+        `);
 
 
                         } catch (e) {
@@ -234,19 +234,19 @@
                             }).addTo(layerGroup);
 
                             layer.bindPopup(`
-        <div class="popup-card-animated">
-            <div class="popup-header">
-                <i class="fas fa-seedling icon"></i>
-                <div class="popup-title">${w.nama_komoditas}</div>
+            <div class="popup-card-animated">
+                <div class="popup-header">
+                    <i class="fas fa-seedling icon"></i>
+                    <div class="popup-title">${w.nama_komoditas}</div>
+                </div>
+                <div class="popup-body">
+                    <p><strong>Luas:</strong> ${w.luas_wilayah} Ha</p>
+                    <p><strong>Kecamatan:</strong> ${w.kecamatan.nama_kecamatan}</p>
+                    <p><i class="fas fa-calendar-plus"></i> <small>Dibuat: ${new Date(w.created_at).toLocaleDateString('id-ID')}</small></p>
+                    <p><i class="fas fa-calendar-check"></i> <small>Update: ${new Date(w.updated_at).toLocaleDateString('id-ID')}</small></p>
+                </div>
             </div>
-            <div class="popup-body">
-                <p><strong>Luas:</strong> ${w.luas_wilayah} Ha</p>
-                <p><strong>Kecamatan:</strong> ${w.kecamatan.nama_kecamatan}</p>
-                <p><i class="fas fa-calendar-plus"></i> <small>Dibuat: ${new Date(w.created_at).toLocaleDateString('id-ID')}</small></p>
-                <p><i class="fas fa-calendar-check"></i> <small>Update: ${new Date(w.updated_at).toLocaleDateString('id-ID')}</small></p>
-            </div>
-        </div>
-    `);
+        `);
 
 
 
@@ -288,16 +288,16 @@
                             }).addTo(map); // Ditambahkan langsung ke map, bukan layerGroup
 
                             layer.bindPopup(`
-        <div class="popup-card-animated">
-            <div class="popup-header">
-                <i class="fas fa-location-dot icon"></i>
-                <div class="popup-title">${k.nama_kecamatan}</div>
+            <div class="popup-card-animated">
+                <div class="popup-header">
+                    <i class="fas fa-location-dot icon"></i>
+                    <div class="popup-title">${k.nama_kecamatan}</div>
+                </div>
+                <div class="popup-body">
+                    <p><strong>Luas:</strong> ${k.luas_kecamatan} Ha</p>
+                </div>
             </div>
-            <div class="popup-body">
-                <p><strong>Luas:</strong> ${k.luas_kecamatan} Ha</p>
-            </div>
-        </div>
-    `);
+        `);
 
                         } catch (e) {
                             console.error('Gagal parsing polygon_kecamatan:', e, k.polygon_kecamatan);
