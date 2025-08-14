@@ -38,8 +38,15 @@
             {{-- Nama Komoditas --}}
             <div>
                 <label for="nama_komoditas" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Nama Komoditas</label>
-                <input type="text" id="nama_komoditas" name="nama_komoditas" value="{{ old('nama_komoditas', $wilayah->nama_komoditas) }}" required
-                       class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
+                <select id="komoditas_id" name="komoditas_id" required
+                        class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
+                        <option value="">-- Pilih Komoditas --</option>
+                        @foreach($komoditas as $item)
+                            <option value="{{ $item->id }}" {{ old('komoditas_id', $wilayah->komoditas_id ?? '') == $item->id ? 'selected' : '' }}>
+                                {{ $item->nama }}
+                            </option>
+                        @endforeach
+                    </select>
             </div>
 
             {{-- Dropdown Kecamatan --}}

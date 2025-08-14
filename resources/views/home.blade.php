@@ -84,7 +84,8 @@
         .leaflet-popup-tip {
             background: white;
         }
-         #map {
+
+        #map {
             height: 500px;
             width: 100%;
         }
@@ -266,41 +267,38 @@
                     <p class="text-slate-500 mt-2 text-lg">Potensi pertanian Kabupaten Mappi dalam angka.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                     <div
-                        class="bg-white rounded-2xl shadow-md hover:shadow-xl p-8 flex items-center space-x-6 transform hover:-translate-y-2 transition-all duration-300 border border-gray-100">
-                        <div
-                            class="flex-shrink-0 p-5 rounded-2xl bg-gradient-to-br from-sky-100 to-sky-200 text-sky-600">
-                            <i class="bi bi-signpost-split-fill text-4xl"></i>
+                        class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl hover:scale-105 transform transition-all duration-300 animate__animated animate__fadeInUp">
+                        <div class="flex-shrink-0 p-4 rounded-full bg-sky-100 text-sky-600">
+                            <i class="bi bi-geo-alt-fill text-3xl"></i>
                         </div>
                         <div>
-                            <p class="text-slate-500 text-base font-medium">Total Kecamatan</p>
-                            <p class="text-4xl font-bold text-agri-dark">{{ $groupedData->count() }}</p>
+                            <p class="text-gray-500 text-sm font-medium">Total Kecamatan</p>
+                            <p class="text-3xl font-bold text-gray-800">{{ $totalKecamatan }}</p>
                         </div>
                     </div>
                     <div
-                        class="bg-white rounded-2xl shadow-md hover:shadow-xl p-8 flex items-center space-x-6 transform hover:-translate-y-2 transition-all duration-300 border border-gray-100">
-                        <div
-                            class="flex-shrink-0 p-5 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-200 text-emerald-600">
-                            <i class="bi bi-flower1 text-4xl"></i>
+                        class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl hover:scale-105 transform transition-all duration-300 animate__animated animate__fadeInUp animate__delay-1s">
+                        <div class="flex-shrink-0 p-4 rounded-full bg-emerald-100 text-emerald-600">
+                            <i class="bi bi-flower1 text-3xl"></i>
                         </div>
                         <div>
-                            <p class="text-slate-500 text-base font-medium">Jenis Komoditas</p>
-                            <p class="text-4xl font-bold text-agri-dark">
-                                {{ $groupedData->flatten(1)->pluck('nama_komoditas')->unique()->count() }}</p>
+                            <p class="text-gray-500 text-sm font-medium">Total Komoditas</p>
+                            <p class="text-3xl font-bold text-gray-800">{{ $totalKomoditas }}</p>
                         </div>
                     </div>
                     <div
-                        class="bg-white rounded-2xl shadow-md hover:shadow-xl p-8 flex items-center space-x-6 transform hover:-translate-y-2 transition-all duration-300 border border-gray-100">
-                        <div
-                            class="flex-shrink-0 p-5 rounded-2xl bg-gradient-to-br from-amber-100 to-amber-200 text-amber-600">
-                            <i class="bi bi-bounding-box-circles text-4xl"></i>
+                        class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl hover:scale-105 transform transition-all duration-300 animate__animated animate__fadeInUp animate__delay-2s">
+                        <div class="flex-shrink-0 p-4 rounded-full bg-amber-100 text-amber-600">
+                            <i class="bi bi-bounding-box-circles text-3xl"></i>
                         </div>
                         <div>
-                            <p class="text-slate-500 text-base font-medium">Total Luas Wilayah</p>
-                            <p class="text-4xl font-bold text-agri-dark">
-                                {{ number_format($groupedData->flatten(1)->sum('total_luas'), 0) }} <span
-                                    class="text-2xl text-slate-400">Ha</span></p>
+                            <p class="text-gray-500 text-sm font-medium">Total Luas Wilayah</p>
+                            <p class="text-3xl font-bold text-gray-800">
+                                {{ number_format($groupedData->flatten(1)->sum('total_luas'), 2) }} <span
+                                    class="text-xl">Ha</span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -316,7 +314,9 @@
                             <select id="filterKomoditasSelect"
                                 class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-agri-green focus:border-agri-green p-3 transition">
                                 <option value="">-- Semua Komoditas --</option>
-                                @php $komoditasList = $wilayah->pluck('nama_komoditas')->unique()->sort(); @endphp
+                                @php
+                                    $komoditasList = $wilayah->pluck('komoditas.nama')->unique()->sort();
+                                @endphp
                                 @foreach($komoditasList as $komoditas)
                                     <option value="{{ $komoditas }}">{{ $komoditas }}</option>
                                 @endforeach
@@ -325,7 +325,7 @@
                                 class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-agri-green focus:border-agri-green p-3 transition">
                                 <option value="">-- Semua Kecamatan --</option>
                                 @foreach($polygon_kecamatan as $kecamatan)
-                                    <option value="{{ $kecamatan->id }}">{{ $kecamatan->nama_kecamatan }}</option>
+                                    <option value="{{ $kecamatan->kecamatan_id }}">{{ $kecamatan->nama_kecamatan }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -374,7 +374,8 @@
                                     <option value="">Semua Bulan</option>
                                     @foreach($availableMonths as $monthNum => $monthName)
                                         <option value="{{ $monthNum }}" {{ $selectedMonth == $monthNum ? 'selected' : '' }}>
-                                            {{ $monthName }}</option>
+                                            {{ $monthName }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -817,7 +818,7 @@
                                 style: { color: w.warna || '#3388ff', weight: 2, fillOpacity: 0.4 },
                                 pane: 'commodityPane'
                             }).addTo(layerGroup);
-                            layer.bindPopup(`<div class="popup-card-animated"><div class="popup-header"><i class="fas fa-seedling icon"></i><div class="popup-title">${w.nama_komoditas}</div></div><div class="popup-body"><p><strong>Luas:</strong> ${w.luas_wilayah} Ha</p><p><strong>Jumlah:</strong> ${w.jumlah_komoditas} unit</p><p><strong>Kecamatan:</strong> ${w.kecamatan.nama_kecamatan}</p><p><i class="fas fa-calendar-plus"></i> <small>Dibuat: ${new Date(w.created_at).toLocaleDateString('id-ID')}</small></p><p><i class="fas fa-calendar-check"></i> <small>Update: ${new Date(w.updated_at).toLocaleDateString('id-ID')}</small></p></div></div>`);
+                            layer.bindPopup(`<div class="popup-card-animated"><div class="popup-header"><i class="fas fa-seedling icon"></i><div class="popup-title">${w.komoditas.nama}</div></div><div class="popup-body"><p><strong>Luas:</strong> ${w.luas_wilayah} Ha</p><p><strong>Jumlah:</strong> ${w.jumlah_komoditas} unit</p><p><strong>Kecamatan:</strong> ${w.kecamatan.nama_kecamatan}</p><p><i class="fas fa-calendar-plus"></i> <small>Dibuat: ${new Date(w.created_at).toLocaleDateString('id-ID')}</small></p><p><i class="fas fa-calendar-check"></i> <small>Update: ${new Date(w.updated_at).toLocaleDateString('id-ID')}</small></p></div></div>`);
                             const bounds = layer.getBounds();
                             if (bounds.isValid()) { boundsArray.push(bounds); }
                         } catch (e) { console.error('Gagal parsing GeoJSON:', e, w.polygon); }

@@ -35,7 +35,8 @@
                         <td class="px-6 py-4">{{ $admin->email }}</td>
                         <td class="px-6 py-4">
                             <span class="inline-block px-3 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-700 dark:text-white shadow">
-                                {{ $admin->bidang->nama ?? '-' }}
+{{ optional($admin->bidang)->nama ?? '-' }}
+
                             </span>
                         </td>
                         <td class="px-6 py-4">

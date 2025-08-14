@@ -17,10 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-        Bidang::insert([
-            ['nama' => 'Perkebunan'],
-            ['nama' => 'Tanaman Pangan']
-        ]);
+
         
     }
 }

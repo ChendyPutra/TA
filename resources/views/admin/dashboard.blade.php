@@ -14,7 +14,8 @@
             <p class="text-center text-gray-500 mb-10">Analisis Data Pertanian Kabupaten Mappi</p>
 
             @if(session('success'))
-                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md shadow-md mb-8 animate__animated animate__fadeInDown" role="alert">
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md shadow-md mb-8 animate__animated animate__fadeInDown"
+                    role="alert">
                     <div class="flex">
                         <div class="py-1"><i class="bi bi-check-circle-fill mr-3"></i></div>
                         <div>
@@ -27,48 +28,55 @@
 
             {{-- Ringkasan Statistik --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                <div class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl hover:scale-105 transform transition-all duration-300 animate__animated animate__fadeInUp">
+                <div
+                    class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl hover:scale-105 transform transition-all duration-300 animate__animated animate__fadeInUp">
                     <div class="flex-shrink-0 p-4 rounded-full bg-sky-100 text-sky-600">
                         <i class="bi bi-geo-alt-fill text-3xl"></i>
                     </div>
                     <div>
                         <p class="text-gray-500 text-sm font-medium">Total Kecamatan</p>
-                        <p class="text-3xl font-bold text-gray-800">{{ $groupedData->count() }}</p>
+                        <p class="text-3xl font-bold text-gray-800">{{ $totalKecamatan }}</p>
                     </div>
                 </div>
-                <div class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl hover:scale-105 transform transition-all duration-300 animate__animated animate__fadeInUp animate__delay-1s">
+                <div
+                    class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl hover:scale-105 transform transition-all duration-300 animate__animated animate__fadeInUp animate__delay-1s">
                     <div class="flex-shrink-0 p-4 rounded-full bg-emerald-100 text-emerald-600">
                         <i class="bi bi-flower1 text-3xl"></i>
                     </div>
                     <div>
                         <p class="text-gray-500 text-sm font-medium">Total Komoditas</p>
-                        <p class="text-3xl font-bold text-gray-800">{{ $groupedData->flatten(1)->pluck('nama_komoditas')->unique()->count() }}</p>
+                        <p class="text-3xl font-bold text-gray-800">{{ $totalKomoditas }}</p>
                     </div>
                 </div>
-                <div class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl hover:scale-105 transform transition-all duration-300 animate__animated animate__fadeInUp animate__delay-2s">
+                <div
+                    class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl hover:scale-105 transform transition-all duration-300 animate__animated animate__fadeInUp animate__delay-2s">
                     <div class="flex-shrink-0 p-4 rounded-full bg-amber-100 text-amber-600">
                         <i class="bi bi-bounding-box-circles text-3xl"></i>
                     </div>
                     <div>
                         <p class="text-gray-500 text-sm font-medium">Total Luas Wilayah</p>
-                        <p class="text-3xl font-bold text-gray-800">{{ number_format($groupedData->flatten(1)->sum('total_luas'), 2) }} <span class="text-xl">Ha</span></p>
+                        <p class="text-3xl font-bold text-gray-800">
+                            {{ number_format($groupedData->flatten(1)->sum('total_luas'), 2) }} <span
+                                class="text-xl">Ha</span></p>
                     </div>
                 </div>
             </div>
 
             {{-- Peta dan Filter --}}
             <div class="bg-white p-6 rounded-xl shadow-lg mb-12">
-                 <div class="flex flex-col md:flex-row gap-4 mb-6">
-                    <select id="filterKomoditasSelect" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2.5 transition">
+                <div class="flex flex-col md:flex-row gap-4 mb-6">
+                    <select id="filterKomoditasSelect"
+                        class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2.5 transition">
                         <option value="">-- Filter Berdasarkan Komoditas --</option>
                         @php
-                            $komoditasList = $wilayah->pluck('nama_komoditas')->unique();
+                            $komoditasList = $wilayah->pluck('komoditas.nama')->unique()->sort();
                         @endphp
                         @foreach($komoditasList as $komoditas)
                             <option value="{{ $komoditas }}">{{ $komoditas }}</option>
                         @endforeach
                     </select>
-                     <select id="filterKecamatanSelect" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2.5 transition">
+                    <select id="filterKecamatanSelect"
+                        class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2.5 transition">
                         <option value="">-- Filter Berdasarkan Kecamatan --</option>
                         @foreach($polygon_kecamatan as $kecamatan)
                             <option value="{{ $kecamatan->id }}">{{ $kecamatan->nama_kecamatan }}</option>
@@ -90,29 +98,35 @@
                 </div>
 
                 {{-- Filter Tahun dan Bulan --}}
-                <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-center animate__animated animate__fadeInDown">
+                <div
+                    class="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-center animate__animated animate__fadeInDown">
                     <h3 class="font-semibold text-lg text-gray-700 mb-4">Filter Data Waktu</h3>
                     <form action="{{ route('admin.dashboard') }}" method="GET" class="space-y-4">
                         <div>
                             <label for="year" class="block mb-2 text-sm font-medium text-gray-900">Tahun:</label>
-                            <select name="year" id="year" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                            <select name="year" id="year"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
                                 <option value="">Semua Tahun</option>
                                 @foreach($availableYears as $year)
-                                    <option value="{{ $year }}" {{ $selectedYear == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                    <option value="{{ $year }}" {{ $selectedYear == $year ? 'selected' : '' }}>{{ $year }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
                         <div>
                             <label for="month" class="block mb-2 text-sm font-medium text-gray-900">Bulan:</label>
-                            <select name="month" id="month" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                            <select name="month" id="month"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
                                 <option value="">Semua Bulan</option>
                                 @foreach($availableMonths as $monthNum => $monthName)
-                                    <option value="{{ $monthNum }}" {{ $selectedMonth == $monthNum ? 'selected' : '' }}>{{ $monthName }}</option>
+                                    <option value="{{ $monthNum }}" {{ $selectedMonth == $monthNum ? 'selected' : '' }}>
+                                        {{ $monthName }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="pt-2">
-                            <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 flex items-center justify-center">
+                            <button type="submit"
+                                class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 flex items-center justify-center">
                                 <i class="bi bi-funnel-fill mr-2"></i> Terapkan Filter
                             </button>
                         </div>
@@ -121,7 +135,8 @@
             </div>
 
             {{-- Bagian Per Kecamatan --}}
-            <h2 class="text-2xl font-bold text-gray-800 text-center mt-16 mb-8 animate__animated animate__fadeIn">Detail Data & Grafik Per Kecamatan</h2>
+            <h2 class="text-2xl font-bold text-gray-800 text-center mt-16 mb-8 animate__animated animate__fadeIn">Detail
+                Data & Grafik Per Kecamatan</h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 @forelse($groupedData as $kecamatan => $komoditas)
                     <div class="animate__animated animate__zoomIn">
@@ -131,23 +146,34 @@
 
                                 {{-- Navigasi Tab dengan gaya Tailwind --}}
                                 <div class="mb-4 border-b border-gray-200">
-                                    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="kecamatanTab-{{ Str::slug($kecamatan) }}" role="tablist">
+                                    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center"
+                                        id="kecamatanTab-{{ Str::slug($kecamatan) }}" role="tablist">
                                         <li class="mr-2" role="presentation">
-                                            <button class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300" id="table-tab-{{ Str::slug($kecamatan) }}" data-bs-toggle="tab" data-bs-target="#table-{{ Str::slug($kecamatan) }}" type="button" role="tab" aria-controls="table-{{ Str::slug($kecamatan) }}" aria-selected="true">
+                                            <button
+                                                class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300"
+                                                id="table-tab-{{ Str::slug($kecamatan) }}" data-bs-toggle="tab"
+                                                data-bs-target="#table-{{ Str::slug($kecamatan) }}" type="button" role="tab"
+                                                aria-controls="table-{{ Str::slug($kecamatan) }}" aria-selected="true">
                                                 <i class="bi bi-table mr-1"></i> Detail Tabel
                                             </button>
                                         </li>
                                         <li class="mr-2" role="presentation">
-                                            <button class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300" id="chart-tab-{{ Str::slug($kecamatan) }}" data-bs-toggle="tab" data-bs-target="#chart-{{ Str::slug($kecamatan) }}-content" type="button" role="tab" aria-controls="chart-{{ Str::slug($kecamatan) }}-content" aria-selected="false">
+                                            <button
+                                                class="inline-block p-4 border-b-2 rounded-t-lg transition-colors duration-300"
+                                                id="chart-tab-{{ Str::slug($kecamatan) }}" data-bs-toggle="tab"
+                                                data-bs-target="#chart-{{ Str::slug($kecamatan) }}-content" type="button"
+                                                role="tab" aria-controls="chart-{{ Str::slug($kecamatan) }}-content"
+                                                aria-selected="false">
                                                 <i class="bi bi-bar-chart-fill mr-1"></i> Grafik
                                             </button>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
-                            
+
                             <div class="tab-content px-6 pb-6 flex-grow" id="kecamatanTabContent-{{ Str::slug($kecamatan) }}">
-                                <div class="tab-pane fade" id="table-{{ Str::slug($kecamatan) }}" role="tabpanel" aria-labelledby="table-tab-{{ Str::slug($kecamatan) }}">
+                                <div class="tab-pane fade" id="table-{{ Str::slug($kecamatan) }}" role="tabpanel"
+                                    aria-labelledby="table-tab-{{ Str::slug($kecamatan) }}">
                                     <div class="overflow-x-auto">
                                         <table class="w-full text-sm text-left text-gray-500">
                                             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
@@ -163,9 +189,12 @@
                                                 @foreach($komoditas as $i => $w)
                                                     <tr class="hover:bg-gray-50">
                                                         <td class="px-6 py-4 font-medium text-gray-900">{{ $i + 1 }}</td>
-                                                        <td class="px-6 py-4 font-medium text-gray-900">{{ $w->nama_komoditas }}</td>
+                                                        <td class="px-6 py-4 font-medium text-gray-900">{{ $w->nama_komoditas }}
+                                                        </td>
                                                         <td class="px-6 py-4">
-                                                            <span class="px-3 py-1 text-xs font-semibold rounded-full text-white shadow" style="background-color: {{ $w->warna }};">
+                                                            <span
+                                                                class="px-3 py-1 text-xs font-semibold rounded-full text-white shadow"
+                                                                style="background-color: {{ $w->warna }};">
                                                                 {{ $w->warna }}
                                                             </span>
                                                         </td>
@@ -177,7 +206,8 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="chart-{{ Str::slug($kecamatan) }}-content" role="tabpanel" aria-labelledby="chart-tab-{{ Str::slug($kecamatan) }}">
+                                <div class="tab-pane fade" id="chart-{{ Str::slug($kecamatan) }}-content" role="tabpanel"
+                                    aria-labelledby="chart-tab-{{ Str::slug($kecamatan) }}">
                                     <div class="h-96">
                                         <canvas id="chart-{{ Str::slug($kecamatan) }}"></canvas>
                                     </div>
@@ -186,7 +216,8 @@
                         </div>
                     </div>
                 @empty
-                    <div class="lg:col-span-2 bg-sky-100 border-l-4 border-sky-500 text-sky-700 p-6 rounded-md shadow-md text-center animate__animated animate__fadeIn">
+                    <div
+                        class="lg:col-span-2 bg-sky-100 border-l-4 border-sky-500 text-sky-700 p-6 rounded-md shadow-md text-center animate__animated animate__fadeIn">
                         <i class="bi bi-info-circle text-2xl mr-3"></i>
                         <p class="font-semibold">Tidak ada data komoditas yang ditemukan untuk filter yang dipilih.</p>
                     </div>
@@ -197,8 +228,9 @@
 
     {{-- Script Chart.js & Datalabels (TIDAK DIUBAH) --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-    
+    <script
+        src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
     {{-- Script untuk Tab (agar tab Bootstrap tetap berfungsi dengan style Tailwind) --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -212,7 +244,7 @@
                     tabTrigger.show();
                 });
             });
-            
+
             // Atur tab aktif pertama secara manual untuk setiap kartu
             document.querySelectorAll('.kecamatan-card').forEach(card => {
                 const firstTab = card.querySelector('[data-bs-toggle="tab"]');
@@ -227,7 +259,7 @@
             // Styling untuk tab
             document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
                 tab.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
-                
+
                 tab.addEventListener('show.bs.tab', function (e) {
                     // Hapus kelas aktif dari semua tab dalam grup yang sama
                     const tabGroup = e.target.closest('ul').querySelectorAll('button');
@@ -235,7 +267,7 @@
                         t.classList.remove('active', 'border-indigo-500', 'text-indigo-600');
                         t.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
                     });
-                    
+
                     // Tambahkan kelas aktif ke tab yang diklik
                     e.target.classList.add('active', 'border-indigo-500', 'text-indigo-600');
                     e.target.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
@@ -243,7 +275,7 @@
             });
         });
     </script>
-    
+
     {{-- Script utama untuk Chart dan Leaflet (TIDAK DIUBAH) --}}
     <script>
         // Kode JavaScript Anda yang ada untuk Chart.js dan Leaflet diletakkan di sini.
@@ -501,6 +533,7 @@
                 opacity: 0;
                 transform: scale(0.85);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -516,15 +549,52 @@
         .leaflet-popup-tip {
             background: #e8f5e9 !important;
         }
-        
+
         /* Dan seterusnya untuk style popup lainnya... */
-        .popup-card-region { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #fff3e0, #ffffff); padding: 16px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); color: #e65100; width: 260px; animation: fadeInScale 0.4s ease-out; }
-        .popup-card-region.kabupaten { background: linear-gradient(135deg, #e3f2fd, #ffffff); color: #1565c0; }
-        .popup-card-region .popup-header { display: flex; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 6px; }
-        .popup-card-region .icon { font-size: 22px; margin-right: 10px; }
-        .popup-card-region .popup-title { font-size: 1.1rem; font-weight: bold; }
-        .popup-card-region .popup-body p { margin: 6px 0; font-size: 0.95rem; color: #424242; }
-        .popup-card-region .popup-body i { margin-right: 5px; color: inherit; }
+        .popup-card-region {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #fff3e0, #ffffff);
+            padding: 16px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            color: #e65100;
+            width: 260px;
+            animation: fadeInScale 0.4s ease-out;
+        }
+
+        .popup-card-region.kabupaten {
+            background: linear-gradient(135deg, #e3f2fd, #ffffff);
+            color: #1565c0;
+        }
+
+        .popup-card-region .popup-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 6px;
+        }
+
+        .popup-card-region .icon {
+            font-size: 22px;
+            margin-right: 10px;
+        }
+
+        .popup-card-region .popup-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .popup-card-region .popup-body p {
+            margin: 6px 0;
+            font-size: 0.95rem;
+            color: #424242;
+        }
+
+        .popup-card-region .popup-body i {
+            margin-right: 5px;
+            color: inherit;
+        }
     </style>
 
     <script>
@@ -576,7 +646,7 @@
                                 style: { color: w.warna || '#3388ff', weight: 2, fillOpacity: 0.4 },
                                 pane: 'commodityPane'
                             }).addTo(layerGroup);
-                            layer.bindPopup(`<div class="popup-card-animated"><div class="popup-header"><i class="fas fa-seedling icon"></i><div class="popup-title">${w.nama_komoditas}</div></div><div class="popup-body"><p><strong>Luas:</strong> ${w.luas_wilayah} Ha</p><p><strong>Jumlah:</strong> ${w.jumlah_komoditas} unit</p><p><strong>Kecamatan:</strong> ${w.kecamatan.nama_kecamatan}</p><p><i class="fas fa-calendar-plus"></i> <small>Dibuat: ${new Date(w.created_at).toLocaleDateString('id-ID')}</small></p><p><i class="fas fa-calendar-check"></i> <small>Update: ${new Date(w.updated_at).toLocaleDateString('id-ID')}</small></p></div></div>`);
+                            layer.bindPopup(`<div class="popup-card-animated"><div class="popup-header"><i class="fas fa-seedling icon"></i><div class="popup-title">${w.komoditas.nama}</div></div><div class="popup-body"><p><strong>Luas:</strong> ${w.luas_wilayah} Ha</p><p><strong>Jumlah:</strong> ${w.jumlah_komoditas} unit</p><p><strong>Kecamatan:</strong> ${w.kecamatan.nama_kecamatan}</p><p><i class="fas fa-calendar-plus"></i> <small>Dibuat: ${new Date(w.created_at).toLocaleDateString('id-ID')}</small></p><p><i class="fas fa-calendar-check"></i> <small>Update: ${new Date(w.updated_at).toLocaleDateString('id-ID')}</small></p></div></div>`);
                             const bounds = layer.getBounds();
                             if (bounds.isValid()) { boundsArray.push(bounds); }
                         } catch (e) { console.error('Gagal parsing GeoJSON:', e, w.polygon); }
@@ -589,20 +659,52 @@
                     map.fitBounds(combinedBounds, { padding: [30, 30], maxZoom: 16 });
                 } else { map.setView([-6.2, 106.8], 10); }
             }
-            
-            function renderKecamatan() {
+
+            const kecamatanLayerGroup = L.layerGroup().addTo(map);
+
+            function renderKecamatan(filterKecamatan = '') {
+                kecamatanLayerGroup.clearLayers(); // 🔹 Hapus semua layer kecamatan dulu
+
+                const boundsArray = [];
+
                 dataKecamatan.forEach(k => {
-                    if (k.polygon_kecamatan) {
-                        try {
-                            const geojson = JSON.parse(k.polygon_kecamatan);
-                            const layer = L.geoJSON(geojson, {
-                                style: { color: k.warna || '#000000', weight: 1, fillOpacity: 0.4, dashArray: '4,4' }
-                            }).addTo(map);
-                            layer.bindPopup(`<div class="popup-card-animated"><div class="popup-header"><i class="fas fa-location-dot icon"></i><div class="popup-title">${k.nama_kecamatan}</div></div><div class="popup-body"><p><strong>Luas:</strong> ${k.luas_kecamatan} Ha</p></div></div>`);
-                        } catch (e) { console.error('Gagal parsing polygon_kecamatan:', e, k.polygon_kecamatan); }
+                    // 🔹 Hanya render kecamatan yang dipilih, atau semua jika filter kosong
+                    if (!filterKecamatan || k.kecamatan_id == filterKecamatan) {
+                        if (k.polygon_kecamatan) {
+                            try {
+                                const geojson = JSON.parse(k.polygon_kecamatan);
+                                const layer = L.geoJSON(geojson, {
+                                    style: { color: k.warna || '#000000', weight: 1, fillOpacity: 0.4, dashArray: '4,4' }
+                                }).addTo(kecamatanLayerGroup);
+
+                                layer.bindPopup(`
+                            <div class="popup-card-animated">
+                                <div class="popup-header"><i class="fas fa-location-dot icon"></i>
+                                    <div class="popup-title">${k.nama_kecamatan}</div>
+                                </div>
+                                <div class="popup-body"><p><strong>Luas:</strong> ${k.luas_kecamatan} Ha</p></div>
+                            </div>
+                        `);
+
+                                const bounds = layer.getBounds();
+                                if (bounds.isValid()) { boundsArray.push(bounds); }
+                            } catch (e) {
+                                console.error('Gagal parsing polygon_kecamatan:', e, k.polygon_kecamatan);
+                            }
+                        }
                     }
                 });
+
+                // 🔹 Zoom otomatis jika ada kecamatan yang cocok
+                if (boundsArray.length > 0) {
+                    let combinedBounds = boundsArray[0];
+                    for (let i = 1; i < boundsArray.length; i++) {
+                        combinedBounds.extend(boundsArray[i]);
+                    }
+                    map.fitBounds(combinedBounds, { padding: [30, 30], maxZoom: 16 });
+                }
             }
+
 
             renderKabupaten();
             renderKecamatan();
@@ -616,8 +718,11 @@
             document.getElementById('filterKecamatanSelect').addEventListener('change', () => {
                 const komoditas = document.getElementById('filterKomoditasSelect').value;
                 const kecamatan = document.getElementById('filterKecamatanSelect').value;
-                renderMap(komoditas, kecamatan);
+                renderMap(komoditas, kecamatan); // 🔹 Filter polygon komoditas
+                renderKecamatan(kecamatan);      // 🔹 Filter polygon kecamatan
             });
+
+
         });
     </script>
 @endpush

@@ -33,6 +33,7 @@ Route::middleware('auth:admin')->group(function () {
 });
 Route::get('/get-polygon-kabupaten', [WilayahController::class, 'getPolygonKabupaten']);
 Route::get('/get-kecamatan/{id}', [WilayahController::class, 'getKecamatan'])->name('get.kecamatan');
+
 Route::get('/', [HomeController::class, 'indexs'])->name('home');
 
 // ROUTE UNTUK SUPERADMIN

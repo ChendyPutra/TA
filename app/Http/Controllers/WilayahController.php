@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
+use App\Models\Komoditas;
 use App\Models\WilayahPertanian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,51 +14,50 @@ use Illuminate\Support\Facades\Log;
 class WilayahController extends Controller
 {
     public function index(Request $request)
-{
-    $admin = auth('admin')->user();
-    $filter = $request->query('filter');
+    {
+        $admin = auth('admin')->user();
+        $filter = $request->query('filter');
 
-    $query = WilayahPertanian::with(['kecamatan']);
+$query = WilayahPertanian::with(['kecamatan', 'komoditas']);
 
-    // 🟢 Jika bukan superadmin dan filter bukan 'all', batasi data
-    if ($admin->role !== 'superadmin' && $filter !== 'all') {
-        $query->where('bidang_id', $admin->bidang_id);
+        // 🟢 Jika bukan superadmin dan filter bukan 'all', batasi data
+        if ($admin->role !== 'superadmin' && $filter !== 'all') {
+            $query->where('bidang_id', $admin->bidang_id);
+        }
+
+        $wilayah = $query->get();
+
+        return view('wilayah.index', compact('wilayah'));
     }
-
-    $wilayah = $query->get();
-
-    return view('wilayah.index', compact('wilayah'));
-}
 
 
     public function create()
     {
-        $kecamatans = Kecamatan::all(); // Ambil data kecamatan dari tabel
-        return view('wilayah.create', compact('kecamatans'));
+        $kecamatans = Kecamatan::all();
+        $komoditas = Komoditas::all();
+        return view('wilayah.create', compact('kecamatans', 'komoditas'));
     }
 
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama_komoditas' => 'required',
-            'kecamatan_id' => 'required',
+            'komoditas_id' => 'required|exists:komoditas,id',
+            'kecamatan_id' => 'required|exists:kecamatans,kecamatan_id',
             'warna' => 'required',
             'polygon' => 'required',
             'luas_wilayah' => 'required|numeric',
-            'jumlah_komoditas' => 'required|numeric|min:0', // Tambahkan validasi ini
+            'jumlah_komoditas' => 'required|numeric|min:0',
         ]);
 
         WilayahPertanian::create([
-            'nama_komoditas' => $request->nama_komoditas,
+            'komoditas_id' => $request->komoditas_id,
             'kecamatan_id' => $request->kecamatan_id,
             'warna' => $request->warna,
             'polygon' => $request->polygon,
             'luas_wilayah' => $request->luas_wilayah,
-            'jumlah_komoditas' => $request->jumlah_komoditas, // Tambahkan ini
-
+            'jumlah_komoditas' => $request->jumlah_komoditas,
             'bidang_id' => auth('admin')->user()->bidang_id,
-
         ]);
 
         return redirect()->route('wilayah.index')->with('success', 'Data wilayah berhasil ditambahkan');
@@ -67,33 +67,28 @@ class WilayahController extends Controller
     public function edit($id)
     {
         $wilayah = WilayahPertanian::findOrFail($id);
-        $kecamatans = Kecamatan::all(); // Ambil semua data kecamatan
-        return view('wilayah.edit', compact('wilayah', 'kecamatans')); // Teruskan $kecamatans ke view
+        $kecamatans = Kecamatan::all();
+        $komoditas = Komoditas::all();
+        return view('wilayah.edit', compact('wilayah', 'kecamatans', 'komoditas'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_komoditas' => 'required',
-            'kecamatan_id' => 'required',
+            'komoditas_id' => 'required|exists:komoditas,id',
+            'kecamatan_id' => 'required|exists:kecamatans,kecamatan_id',
             'warna' => 'required',
             'polygon' => 'required',
             'luas_wilayah' => 'required|numeric',
-            'jumlah_komoditas' => 'required|numeric|min:0', // Tambahkan validasi ini
+            'jumlah_komoditas' => 'required|numeric|min:0',
         ]);
 
         $wilayah = WilayahPertanian::findOrFail($id);
+        $wilayah->update($request->all());
 
-        $wilayah->update([
-            'nama_komoditas' => $request->nama_komoditas,
-            'kecamatan_id' => $request->kecamatan_id,
-            'warna' => $request->warna,
-            'polygon' => $request->polygon,
-            'luas_wilayah' => $request->luas_wilayah,
-            'jumlah_komoditas' => $request->jumlah_komoditas, // Tambahkan ini
-        ]);
 
-        return redirect()->route('wilayah.index')->with('success', 'Data wilayah berhasil diperbarui');
+        return redirect()->route('wilayah.index')
+            ->with('success', 'Data komoditas berhasil diperbarui.');
     }
 
 
@@ -138,23 +133,29 @@ class WilayahController extends Controller
 
         // 4. Query Data Terfilter
         $query = WilayahPertanian::join('kecamatans', 'wilayah_pertanian.kecamatan_id', '=', 'kecamatans.kecamatan_id')
+            ->join('komoditas', 'wilayah_pertanian.komoditas_id', '=', 'komoditas.id')
             ->select(
                 'kecamatans.nama_kecamatan',
-                'wilayah_pertanian.nama_komoditas',
+                'komoditas.nama as nama_komoditas',
                 'wilayah_pertanian.warna',
                 DB::raw('YEAR(wilayah_pertanian.created_at) as tahun'),
                 DB::raw('MONTH(wilayah_pertanian.created_at) as bulan'),
                 DB::raw('SUM(wilayah_pertanian.luas_wilayah) as total_luas'),
-                DB::raw('SUM(wilayah_pertanian.jumlah_komoditas) as jumlah_komoditas') // ✅ PENTING
+                DB::raw('SUM(wilayah_pertanian.jumlah_komoditas) as jumlah_komoditas')
             );
 
-        // 5. Filter tahun & bulan
+
+        // 5. Filter tahun, bulan, dan kecamatan
         if ($selectedYear) {
             $query->whereYear('wilayah_pertanian.created_at', $selectedYear);
         }
         if ($selectedMonth) {
             $query->whereMonth('wilayah_pertanian.created_at', $selectedMonth);
         }
+        if ($request->filled('kecamatan_id')) {
+            $query->where('wilayah_pertanian.kecamatan_id', $request->kecamatan_id);
+        }
+
 
         // 6. Group & Ambil Data
         $data = $query->groupBy(

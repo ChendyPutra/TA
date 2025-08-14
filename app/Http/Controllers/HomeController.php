@@ -33,14 +33,15 @@ class HomeController extends Controller
 
         // Mulai query
         $query = WilayahPertanian::join('kecamatans', 'wilayah_pertanian.kecamatan_id', '=', 'kecamatans.kecamatan_id')
-            ->select(
-                'kecamatans.nama_kecamatan',
-                'wilayah_pertanian.nama_komoditas',
-                'wilayah_pertanian.warna',
-                DB::raw('YEAR(wilayah_pertanian.created_at) as tahun'),
-                DB::raw('MONTH(wilayah_pertanian.created_at) as bulan'),
-                DB::raw('SUM(wilayah_pertanian.luas_wilayah) as total_luas')
-            );
+    ->join('komoditas', 'wilayah_pertanian.komoditas_id', '=', 'komoditas.id') // ambil dari tabel master
+    ->select(
+        'kecamatans.nama_kecamatan',
+        'komoditas.nama as nama_komoditas', // pakai nama dari tabel komoditas
+        'wilayah_pertanian.warna',
+        DB::raw('YEAR(wilayah_pertanian.created_at) as tahun'),
+        DB::raw('MONTH(wilayah_pertanian.created_at) as bulan'),
+        DB::raw('SUM(wilayah_pertanian.luas_wilayah) as total_luas')
+    );
 
         // Tambahkan kondisi filter jika tahun dan bulan dipilih
         if ($selectedYear) {
@@ -51,13 +52,14 @@ class HomeController extends Controller
         }
 
         // Lanjutkan grouping
-        $data = $query->groupBy(
-                'kecamatans.nama_kecamatan',
-                'wilayah_pertanian.nama_komoditas',
-                'wilayah_pertanian.warna',
-                DB::raw('YEAR(wilayah_pertanian.created_at)'),
-                DB::raw('MONTH(wilayah_pertanian.created_at)')
-            )
+       $data = $query->groupBy(
+    'kecamatans.nama_kecamatan',
+    'komoditas.nama', // ✅ ganti ini
+    'wilayah_pertanian.warna',
+    DB::raw('YEAR(wilayah_pertanian.created_at)'),
+    DB::raw('MONTH(wilayah_pertanian.created_at)')
+)
+
             ->orderBy('kecamatans.nama_kecamatan', 'asc')
             ->get();
 
@@ -74,12 +76,26 @@ class HomeController extends Controller
                 'borderColor' => $komoditas->pluck('warna')->toArray(),
             ];
         }
+                $totalKecamatan = Kecamatan::count();
+        $totalKomoditas = WilayahPertanian::count();
+        $totalLuasWilayah = WilayahPertanian::sum('luas_wilayah');
 
-        return view('home', compact('wilayah', 'polygon_kecamatan', 'polygon_kabupaten','groupedData', 'availableYears', 'availableMonths', 'selectedYear', 'selectedMonth', 'chartData'));
+        return view('home', compact('wilayah',
+            'polygon_kecamatan',
+            'polygon_kabupaten',
+            'groupedData',
+            'availableYears',
+            'availableMonths',
+            'selectedYear',
+            'selectedMonth',
+            'chartData',
+            'totalKecamatan',
+            'totalKomoditas',
+            'totalLuasWilayah'));
     }
     public function maps()
 {
-    $wilayah = WilayahPertanian::with('kecamatan')->get();
+$wilayah = WilayahPertanian::with(['kecamatan', 'komoditas'])->get();
     $polygon_kecamatan = Kecamatan::all();
     $polygon_kabupaten = Kabupaten::all(); // Ambil data kabupaten
     return view('home', [

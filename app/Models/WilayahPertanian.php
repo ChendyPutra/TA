@@ -11,16 +11,16 @@ class WilayahPertanian extends Model
 
     protected $table = 'wilayah_pertanian';
 
-    protected $fillable = [
-        'nama_komoditas',
-        'luas_wilayah',
-        'kecamatan_id',  // Foreign key untuk kecamatan
-        'warna',
-        'polygon',
-        'polygon_kecamatan',
-        'jumlah_komoditas',
-         'bidang_id',
-    ];
+   protected $fillable = [
+    'komoditas_id',
+    'kecamatan_id',
+    'warna',
+    'polygon',
+    'luas_wilayah',
+    'jumlah_komoditas',
+    'bidang_id',
+];
+
      // Relasi ke model Kecamatan
      public function kecamatan()
      {
@@ -31,4 +31,9 @@ class WilayahPertanian extends Model
 {
     return $this->belongsTo(Bidang::class);
 }
+public function komoditas()
+{
+    return $this->belongsTo(Komoditas::class, 'komoditas_id');
+}
+
 }

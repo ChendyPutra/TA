@@ -54,7 +54,7 @@
                 @forelse($wilayah as $i => $w)
                 <tr class="{{ $loop->even ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-900' }} border-b dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-150">
                     <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">{{ $i + 1 }}</td>
-                    <td class="px-6 py-4">{{ $w->nama_komoditas }}</td>
+<td class="px-6 py-4">{{ $w->komoditas->nama ?? '-' }}</td>
                     <td class="px-6 py-4">{{ $w->kecamatan?->nama_kecamatan ?? 'N/A' }}</td>
                     <td class="px-6 py-4">
                         <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold shadow"

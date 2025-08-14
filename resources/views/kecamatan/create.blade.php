@@ -83,7 +83,7 @@
 <script>
     // [BARU] Mengambil data kabupaten dari controller
     const kabupatenData = @json($kabupaten ?? null);
-
+    const kecamatanData = @json($kecamatans);
     const isDarkMode = document.documentElement.classList.contains('dark');
     const map = L.map('map').setView([-6.0, 139.0], 8); // Center di Mappi
     const lightTile = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
@@ -166,8 +166,50 @@
             console.error("Gagal parsing atau menampilkan poligon kabupaten:", e);
         }
     }
+  function loadKecamatanPolygons() {
+    if (!kecamatanData || !Array.isArray(kecamatanData)) return;
+
+    kecamatanData.forEach((item) => {
+        if (!item.polygon_kecamatan) return;
+
+        try {
+            const geojson = JSON.parse(item.polygon_kecamatan);
+            const layer = L.geoJSON(geojson, {
+                style: {
+                    color: item.warna || '#00bcd4',
+                    weight: 1,
+                    fillOpacity: 0.4
+                },
+                onEachFeature: function (feature, layer) {
+                    // Tooltip saat hover
+                    layer.bindTooltip(item.nama_kecamatan, {
+                        permanent: false,
+                        direction: 'center',
+                        className: 'kecamatan-tooltip'
+                    });
+
+                    // Hapus efek border hitam saat diklik (disable default Leaflet click styling)
+                    layer.on('click', function (e) {
+                        e.target.setStyle({
+                            weight: 1,
+                            color: item.warna || '#00bcd4'
+                        });
+                    });
+                }
+            }).addTo(map);
+        } catch (e) {
+            console.warn('Gagal parsing polygon kecamatan:', item.nama_kecamatan, e);
+        }
+    });
+}
+
+
 
     // Panggil fungsi ini setelah DOM dimuat
-    document.addEventListener("DOMContentLoaded", loadKabupatenPolygon);
+   document.addEventListener("DOMContentLoaded", () => {
+    loadKabupatenPolygon();
+    loadKecamatanPolygons();
+});
+
 </script>
 @endpush
